@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fetchShipments } from "../../api/shipmentsApi";
-import type { Shipment } from "../../models/shipment";
+import type { Shipment, ShipmentStatus } from "../../models/shipment";
 import { ShipmentsTable } from "./ShipmentsTable";
 
 import styles from "./ShipmentsPage.module.scss";
+import { ShipmentsFilter } from "./ShipmentsFilter";
 
 export function ShipmentsPage() {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
+  //Filter state
+  const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "All">(
+    "All"
+  );
+
+  // Fetch shipments
   useEffect(() => {
     let cancelled = false;
 
@@ -36,9 +43,16 @@ export function ShipmentsPage() {
     };
   }, []);
 
+  const filteredShipments = useMemo(() => {
+    if (statusFilter === "All") return shipments;
+
+    return shipments.filter((shipment) => shipment.status === statusFilter);
+  }, [shipments, statusFilter]);
+
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>Shipments Dashboard</h1>
+      <ShipmentsFilter value={statusFilter} onChange={setStatusFilter} />
 
       {loading && <div>Loading shipments...</div>}
 
@@ -48,7 +62,9 @@ export function ShipmentsPage() {
         </div>
       )}
 
-      {!loading && !loadError && <ShipmentsTable shipments={shipments} />}
+      {!loading && !loadError && (
+        <ShipmentsTable shipments={filteredShipments} />
+      )}
     </div>
   );
 }

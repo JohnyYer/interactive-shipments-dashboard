@@ -11,3 +11,10 @@ export interface Shipment {
   status: ShipmentStatus;
   estimatedArrival: string;
 }
+
+export const ALL_STATUSES: ShipmentStatus[] = [
+  "Booked",
+  "In Transit",
+  "Delivered",
+  "Cancelled",
+];
