@@ -1,0 +1,32 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.headerCell {
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}
+
+.cell {
+  padding: 8px;
+}
+
+.row {
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:hover {
+    background: #fafafa;
+  }
+}
+
+.sortButton {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+}
