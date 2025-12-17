@@ -81,10 +81,10 @@ describe("ShipmentsPage", () => {
 
         await screen.findByText("SHP-001");
 
-        const sortBtn = screen.getByRole("button", { name: /estimated arrival/i });
+        const sortHeader = screen.getByRole("columnheader", { name: /estimated arrival/i });
 
         // First click: ascending by date (earliest first)
-        await user.click(sortBtn);
+        await user.click(sortHeader);
 
         let rows = getBodyRows();
         expect(within(rows[0]).getByText("SHP-002")).toBeInTheDocument(); // 2026-01-03
@@ -92,7 +92,7 @@ describe("ShipmentsPage", () => {
         expect(within(rows[2]).getByText("SHP-003")).toBeInTheDocument(); // 2026-01-20
 
         // Second click: descending by date (latest first)
-        await user.click(sortBtn);
+        await user.click(sortHeader);
 
         rows = getBodyRows();
         expect(within(rows[0]).getByText("SHP-003")).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe("ShipmentsPage", () => {
 
         expect(screen.getByDisplayValue("Port of Rotterdam")).toBeInTheDocument();
 
-        const statusSelect = screen.getByLabelText(/status/i) as HTMLSelectElement;
+        const statusSelect = within(dialog).getByLabelText(/status/i) as HTMLSelectElement;
         expect(statusSelect.value).toBe("Booked");
     });
 
@@ -132,21 +132,24 @@ describe("ShipmentsPage", () => {
 
         await user.click(screen.getByText("SHP-001"));
 
+        const dialog = screen.getByRole("dialog", { name: /quick edit shipment/i });
+
         // edit destination + status
-        const destinationInput = screen.getByLabelText(/destination/i);
+        const destinationInput = within(dialog).getByLabelText("Destination");
         await user.clear(destinationInput);
         await user.type(destinationInput, "Port of Gdansk");
 
-        await user.selectOptions(screen.getByLabelText(/status/i), "Cancelled");
+        await user.selectOptions(within(dialog).getByLabelText("Status"), "Cancelled");
 
-        await user.click(screen.getByRole("button", { name: /save changes/i }));
+        await user.click(within(dialog).getByRole("button", { name: "Save Changes" }));
 
         // modal closes
-        expect(screen.queryByRole("dialog", { name: /quick edit shipment/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole("dialog", { name: "Quick Edit Shipment" })).not.toBeInTheDocument();
 
         // table reflects updated values
-        expect(screen.getByText("Port of Gdansk")).toBeInTheDocument();
-        expect(screen.getByText("Cancelled")).toBeInTheDocument();
+        const table = screen.getByRole("table");
+        expect(within(table).getByText("Port of Gdansk")).toBeInTheDocument();
+        expect(within(table).getByText("Cancelled")).toBeInTheDocument();
 
         expect(mockUpdateShipment).toHaveBeenCalledWith("SHP-001", {
             destination: "Port of Gdansk",
@@ -164,10 +167,10 @@ describe("ShipmentsPage", () => {
 
         await user.click(screen.getByText("SHP-001"));
 
-        await user.click(screen.getByRole("button", { name: /save changes/i }));
+        await user.click(screen.getByRole("button", { name: "Save Changes" }));
 
         // modal stays open
-        expect(screen.getByRole("dialog", { name: /quick edit shipment/i })).toBeInTheDocument();
+        expect(screen.getByRole("dialog", { name: "Quick Edit Shipment" })).toBeInTheDocument();
 
         // error appears
         expect(await screen.findByRole("alert")).toHaveTextContent("Boom");
