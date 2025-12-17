@@ -9,6 +9,17 @@
   padding: 8px;
 }
 
+.headerCellClickable {
+  cursor: pointer;
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+
+  &:hover {
+    background: #fafafa;
+  }
+}
+
 .cell {
   padding: 8px;
 }

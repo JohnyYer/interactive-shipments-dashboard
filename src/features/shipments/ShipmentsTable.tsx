@@ -1,12 +1,15 @@
 import type { Shipment } from "../../models/shipment";
 
 import styles from "./ShipmentsTable.module.scss";
+import type { SortState } from "./utils/sort";
 
 type Props = {
   shipments: Shipment[];
+  onToggleSort: (field: "status" | "estimatedArrival") => void;
+  sort: SortState | null;
 };
 
-export function ShipmentsTable({ shipments }: Props) {
+export function ShipmentsTable({ shipments, onToggleSort, sort }: Props) {
   return (
     <table role="table" className={styles.table}>
       <thead>
@@ -15,19 +18,28 @@ export function ShipmentsTable({ shipments }: Props) {
           <th className={styles.headerCell}>Origin</th>
           <th className={styles.headerCell}>Destination</th>
 
-          <th className={styles.headerCell}>
-            <button type="button" onClick={() => console.log("Sorting status")}>
-              Status
-            </button>
+          <th
+            className={styles.headerCellClickable}
+            onClick={() => onToggleSort("status")}
+          >
+            Status
+            {sort?.key === "status" && (
+              <span className={styles.sortIndicator}>
+                {sort.direction === "asc" ? "▲" : "▼"}
+              </span>
+            )}
           </th>
 
-          <th className={styles.headerCell}>
-            <button
-              type="button"
-              onClick={() => console.log("Sorting estimated arrival")}
-            >
-              Estimated Arrival
-            </button>
+          <th
+            className={styles.headerCellClickable}
+            onClick={() => onToggleSort("estimatedArrival")}
+          >
+            Estimated Arrival
+            {sort?.key === "estimatedArrival" && (
+              <span className={styles.sortIndicator}>
+                {sort.direction === "asc" ? "▲" : "▼"}
+              </span>
+            )}
           </th>
         </tr>
       </thead>

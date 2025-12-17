@@ -5,6 +5,8 @@ import { ShipmentsTable } from "./ShipmentsTable";
 
 import styles from "./ShipmentsPage.module.scss";
 import { ShipmentsFilter } from "./ShipmentsFilter";
+import { applyStatusFilter } from "./utils";
+import { applyShipmentSort, toggleSort, type SortState } from "./utils/sort";
 
 export function ShipmentsPage() {
   const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -15,6 +17,7 @@ export function ShipmentsPage() {
   const [statusFilter, setStatusFilter] = useState<ShipmentStatus | "All">(
     "All"
   );
+  const [sort, setSort] = useState<SortState | null>(null);
 
   // Fetch shipments
   useEffect(() => {
@@ -43,11 +46,15 @@ export function ShipmentsPage() {
     };
   }, []);
 
-  const filteredShipments = useMemo(() => {
-    if (statusFilter === "All") return shipments;
+  const shipmentsToDisplay = useMemo(() => {
+    const filtered = applyStatusFilter(shipments, statusFilter);
 
-    return shipments.filter((shipment) => shipment.status === statusFilter);
-  }, [shipments, statusFilter]);
+    return applyShipmentSort(filtered, sort);
+  }, [shipments, sort, statusFilter]);
+
+  const onToggleSort = (field: "status" | "estimatedArrival") => {
+    setSort((prev) => toggleSort(prev, field));
+  };
 
   return (
     <div className={styles.page}>
@@ -63,7 +70,11 @@ export function ShipmentsPage() {
       )}
 
       {!loading && !loadError && (
-        <ShipmentsTable shipments={filteredShipments} />
+        <ShipmentsTable
+          shipments={shipmentsToDisplay}
+          onToggleSort={onToggleSort}
+          sort={sort}
+        />
       )}
     </div>
   );
