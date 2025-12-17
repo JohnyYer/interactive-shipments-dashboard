@@ -1,73 +1,30 @@
-# React + TypeScript + Vite
+# Interactive Shipments Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Scripts
 
-Currently, two official plugins are available:
+- `npm run dev` - Start the development server
+- `npm run test` - Run tests
+- `npm run test:watch` - Run tests in watch mode
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Architecture & State Management
 
-## React Compiler
+- ShipmentsPage acts as the feature entry point.
+- useShipmentsDashboard encapsulates fetching, derived state, and update flows.
+- Derived state (filter/sort) is implemented via selectors to avoid duplication.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Styling
 
-## Expanding the ESLint configuration
+- SCSS Modules used for scoped, maintainable styles.
+- No UI framework to keep focus on React logic.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Testing Strategy
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Jest + React Testing Library for component-level integration tests.
+- Unit tests for selectors (filter/sort composition).
+- One hook test to validate async data fetching.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Trade-offs
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **No external state managers** (Redux, Zustand, etc.) - The application's state needs are simple enough that React's built-in hooks (`useState`, `useEffect`) combined with custom hooks provide sufficient state management without the overhead of additional libraries.
+- Context API not used to avoid unnecessary indirection.
+- Modal state derived from selected shipment to prevent inconsistent UI.
