@@ -12,7 +12,9 @@ type Props = {
     onSave: (shipmentId: string, payload: Payload) => Promise<void>;
 };
 
-export function QuickEditModal({ open, shipment, onCancel, onSave }: Props) {
+export function QuickEditModal({
+ open, shipment, onCancel, onSave 
+}: Props) {
     const [destination, setDestination] = useState(() => shipment?.destination ?? "");
     const [status, setStatus] = useState<ShipmentStatus>(() => shipment?.status ?? "Booked");
     const [saving, setSaving] = useState(false);

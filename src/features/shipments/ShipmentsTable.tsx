@@ -10,7 +10,9 @@ type Props = {
   onRowClick: (id: string) => void;
 };
 
-export function ShipmentsTable({ shipments, onToggleSort, sort, onRowClick }: Props) {
+export function ShipmentsTable({
+ shipments, onToggleSort, sort, onRowClick 
+}: Props) {
   return (
     <table role="table" className={styles.table}>
       <thead>

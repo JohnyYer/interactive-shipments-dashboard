@@ -6,7 +6,7 @@ module.exports = {
     "\\.(css|less|scss)$": "identity-obj-proxy",
   },
   transform: {
-    "^.+\\.(ts|tsx)$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.json" }],
+    "^.+\\.(ts|tsx)$": ["ts-jest", { tsconfig: "<rootDir>/tsconfig.test.json" }],
   },
   testMatch: ["<rootDir>/src/**/*.test.(ts|tsx)"],
 };
