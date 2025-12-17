@@ -64,7 +64,7 @@ describe("ShipmentsPage", () => {
 
         await screen.findByText("SHP-001");
 
-        const select = screen.getByRole("combobox", { name: /filter by status/i });
+        const select = screen.getByRole("combobox", { name: "Filter by status" });
         await user.selectOptions(select, "Delivered");
 
         const rows = getBodyRows();
@@ -81,7 +81,7 @@ describe("ShipmentsPage", () => {
 
         await screen.findByText("SHP-001");
 
-        const sortHeader = screen.getByRole("columnheader", { name: /estimated arrival/i });
+        const sortHeader = screen.getByRole("columnheader", { name: "Estimated Arrival" });
 
         // First click: ascending by date (earliest first)
         await user.click(sortHeader);
@@ -108,12 +108,12 @@ describe("ShipmentsPage", () => {
 
         await user.click(screen.getByText("SHP-001"));
 
-        const dialog = screen.getByRole("dialog", { name: /quick edit shipment/i });
+        const dialog = screen.getByRole("dialog", { name: "Quick Edit Shipment" });
         expect(dialog).toBeInTheDocument();
 
         expect(screen.getByDisplayValue("Port of Rotterdam")).toBeInTheDocument();
 
-        const statusSelect = within(dialog).getByLabelText(/status/i) as HTMLSelectElement;
+        const statusSelect = within(dialog).getByLabelText("Status") as HTMLSelectElement;
         expect(statusSelect.value).toBe("Booked");
     });
 
@@ -132,7 +132,7 @@ describe("ShipmentsPage", () => {
 
         await user.click(screen.getByText("SHP-001"));
 
-        const dialog = screen.getByRole("dialog", { name: /quick edit shipment/i });
+        const dialog = screen.getByRole("dialog", { name: "Quick Edit Shipment" });
 
         // edit destination + status
         const destinationInput = within(dialog).getByLabelText("Destination");
