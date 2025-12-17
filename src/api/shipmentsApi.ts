@@ -1,4 +1,4 @@
-import type { Shipment } from "../models/shipment";
+import type { Shipment, ShipmentStatus } from "../models/shipment";
 
 const mockShipments: Shipment[] = [
   {
@@ -94,3 +94,24 @@ export async function fetchShipments(): Promise<Shipment[]> {
 
   return mockShipments.map((shipment) => ({ ...shipment }));
 }
+
+export async function updateShipment(
+  shipmentId: string,
+  data: Pick<Shipment, "destination" | "status">
+): Promise<Shipment> {
+  await sleep(1000 + Math.floor(Math.random() * 1000));
+
+  const ok = Math.random() < 0.8;
+
+  if (!ok) throw new Error("Network error: failed to update shipment. Please try again.");
+
+  const existing = mockShipments.find((s) => s.id === shipmentId);
+  if (!existing) throw new Error("Shipment not found.");
+
+  existing.destination = data.destination;
+  existing.status = data.status as ShipmentStatus;
+
+  return { ...existing };
+}
+
+

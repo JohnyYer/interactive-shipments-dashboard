@@ -7,9 +7,10 @@ type Props = {
   shipments: Shipment[];
   onToggleSort: (field: "status" | "estimatedArrival") => void;
   sort: SortState | null;
+  onRowClick: (id: string) => void;
 };
 
-export function ShipmentsTable({ shipments, onToggleSort, sort }: Props) {
+export function ShipmentsTable({ shipments, onToggleSort, sort, onRowClick }: Props) {
   return (
     <table role="table" className={styles.table}>
       <thead>
@@ -48,7 +49,7 @@ export function ShipmentsTable({ shipments, onToggleSort, sort }: Props) {
         {shipments.map((s) => (
           <tr
             key={s.id}
-            onClick={() => console.log("Row clicked", s.id)}
+            onClick={() => onRowClick(s.id)}
             className={styles.row}
           >
             <td className={styles.cell}>{s.id}</td>
